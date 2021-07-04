@@ -133,9 +133,9 @@ public class ResponseService {
     private void setSuccessResult(CommonResult result, String message) {
         //result.setCode(CommonResponse.SUCCESS.getCode());
         if (("").equals(message) || message == null) {
-            //result.setMessage(CommonResponse.SUCCESS.getmessage());
+            result.setMessage(CommonResponse.SUCCESS.getmessage());
         } else {
-            //result.setMessage(message);
+            result.setMessage(message);
         }
     }
 }

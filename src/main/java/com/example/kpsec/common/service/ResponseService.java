@@ -1,9 +1,12 @@
-package com.example.kpsec.apiService.service;
+package com.example.kpsec.common.service;
 
-import com.example.kpsec.apiService.model.CommonResult;
-import com.example.kpsec.apiService.model.SingleResult;
+import com.example.kpsec.common.model.CommonResult;
+import com.example.kpsec.common.model.ListResult;
+import com.example.kpsec.common.model.SingleResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ResponseService {
@@ -49,16 +52,7 @@ public class ResponseService {
         /**
          * System Error
          */
-        SYS_ERROR("99", "System Error", HttpStatus.INTERNAL_SERVER_ERROR),
-
-        /**
-         * Jwt Expired
-         */
-        EXPIRED_ERROR("88", "Jwt Token Expired", HttpStatus.FORBIDDEN),
-        /**
-         * Jwt Expired
-         */
-        JWT_FORMED_ERROR("89", "JWT Token was not correctly", HttpStatus.FORBIDDEN);
+        SYS_ERROR("99", "System Error", HttpStatus.INTERNAL_SERVER_ERROR);
 
 
         private String code;
@@ -87,51 +81,51 @@ public class ResponseService {
     // 단일건 결과를 처리하는 메소드
     public <T> SingleResult<T> getSingleResult(T data, String message) {
         SingleResult<T> result = new SingleResult<>();
-        //result.setData(data);
+        result.setData(data);
         setSuccessResult(result, message);
         return result;
     }
 
     // 다중건 결과를 처리하는 메소드
-//    public <T> ListResult<T> getListResult(List<T> list, String message) {
-//        ListResult<T> result = new ListResult<>();
-//        result.setList(list);
-//        setSuccessResult(result, message);
-//        return result;
-//    }
-//
-//    // 성공 결과만 처리하는 메소드
-//    public CommonResult getSuccessResult(String message) {
-//        CommonResult result = new CommonResult();
-//        setSuccessResult(result, message);
-//        return result;
-//    }
-//
-//    // 실패 결과만 처리하는 메소드
-//    public CommonResult getFailResult(CommonResponse commonResponse) {
-//        CommonResult result = new CommonResult();
-//        result.setCode(commonResponse.getCode());
-//        result.setMessage(commonResponse.getmessage());
-//        return result;
-//    }
-//
-//    // Data not Found
-//    public CommonResult getFailResult(String message) {
-//        CommonResult result = new CommonResult();
-//        result.setCode("11");
-//        result.setMessage(message);
-//        return result;
-//    }
-//
-//    // 결과 모델에 api 요청 성공 데이터를 세팅해주는 메소드
-//    private void setSuccessResult(CommonResult result) {
-//        result.setCode(CommonResponse.SUCCESS.getCode());
-//        result.setMessage(CommonResponse.SUCCESS.getmessage());
-//    }
-//
-//    // SP return message + data
+    public <T> ListResult<T> getListResult(List<T> list, String message) {
+        ListResult<T> result = new ListResult<>();
+        result.setList(list);
+        setSuccessResult(result, message);
+        return result;
+    }
+
+    // 성공 결과만 처리하는 메소드
+    public CommonResult getSuccessResult(String message) {
+        CommonResult result = new CommonResult();
+        setSuccessResult(result, message);
+        return result;
+    }
+
+    // 실패 결과만 처리하는 메소드
+    public CommonResult getFailResult(CommonResponse commonResponse) {
+        CommonResult result = new CommonResult();
+        result.setCode(commonResponse.getCode());
+        result.setMessage(commonResponse.getmessage());
+        return result;
+    }
+
+    // Data not Found
+    public CommonResult getFailResult(String message) {
+        CommonResult result = new CommonResult();
+        result.setCode("11");
+        result.setMessage(message);
+        return result;
+    }
+
+    // 결과 모델에 api 요청 성공 데이터를 세팅해주는 메소드
+    private void setSuccessResult(CommonResult result) {
+        result.setCode(CommonResponse.SUCCESS.getCode());
+        result.setMessage(CommonResponse.SUCCESS.getmessage());
+    }
+
+    // SP return message + data
     private void setSuccessResult(CommonResult result, String message) {
-        //result.setCode(CommonResponse.SUCCESS.getCode());
+        result.setCode(CommonResponse.SUCCESS.getCode());
         if (("").equals(message) || message == null) {
             result.setMessage(CommonResponse.SUCCESS.getmessage());
         } else {

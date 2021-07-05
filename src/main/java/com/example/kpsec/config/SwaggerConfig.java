@@ -13,23 +13,16 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration // http://localhost:8080/swagger-ui.html
 @EnableSwagger2
 public class SwaggerConfig {
-//    @Bean
-//	public Docket api() {
-//		return new Docket(DocumentationType.SWAGGER_2)
-//				.select()
-//				.apis(RequestHandlerSelectors.any())
-//				.paths(PathSelectors.any())
-//				.build();
-//	}
+
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Demo")
-                .description("API EXAMPLE")
+                .title("특정 고객 거래내역 조회 서비스")
+                .description("고객을 타겟팅 하기 위한 지점 마케팅 API를 개발하려 합니다.<br>데이타에는 거래내역, 고객, 지점정보가 있습니다. 각 데이타를 활용하여 아래 기능명세에 대한 API를 개발하고 각 기능별 Unit Test 코드를 개발하세요.")
                 .build();
     }
 
     @Bean
-    public Docket commonApi() {
+    public Docket swaggerApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("swg-group1")//빈설정을 여러개 해줄경우 구분하기 위한 구분자.
                 .apiInfo(this.apiInfo())//스웨거 설명

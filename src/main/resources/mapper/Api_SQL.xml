@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.kpsec.apiService.service.ApiDAO">
+
+    <select id="selectAcctInfoList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT YEAR, MAX(SUM_AMT), MAX(ACCT_NM), MAX(ACCT_NO) FROM
+            (SELECT YEAR, B.ACCT_NM, A.ACCT_NO, SUM(A.AMOUNT) AS SUM_AMT
+            FROM (SELECT SUBSTR(TRANS_DT, 0, 4) AS YEAR, ACCT_NO, AMOUNT FROM TRANS_HIS WHERE CANCEL_YN = 'N' AND TRANS_DT BETWEEN 20180000 AND 20191231) A
+            LEFT JOIN ACCT_INFO B ON A.ACCT_NO = B.ACCT_NO
+            GROUP BY A.ACCT_NO, YEAR
+            )
+        GROUP BY YEAR
+    </select>
+
+</mapper>

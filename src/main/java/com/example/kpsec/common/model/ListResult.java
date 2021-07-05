@@ -1,9 +1,9 @@
-package com.example.kpsec.apiService.model;
-
-import java.util.List;
+package com.example.kpsec.common.model;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter

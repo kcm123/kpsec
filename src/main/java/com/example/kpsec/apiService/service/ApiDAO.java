@@ -7,5 +7,7 @@ import java.util.Map;
 
 @Mapper
 public interface ApiDAO {
-    List<Map<String, Object>> selectAcctInfoList(Map<String, Object> map) throws Exception;
+    List<Map<String, Object>> selectMaxSumCustomer() throws Exception;
+    List<Map<String, Object>> selectNoTransaction() throws Exception;
+    List<Map<String, Object>> selectOrderByMax() throws Exception;
 }

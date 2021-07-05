@@ -1,15 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.kpsec.apiService.service.ApiDAO">
-
-    <select id="selectAcctInfoList" parameterType="java.util.Map" resultType="java.util.Map">
-        SELECT YEAR, MAX(SUM_AMT), MAX(ACCT_NM), MAX(ACCT_NO) FROM
+    <resultMap id="maxCustMap" type="hashmap">
+        <result column="YEAR" property="year"/>
+        <result column="SUM_AMT" property="sumAmt"/>
+        <result column="ACCT_NM" property="acctNm"/>
+        <result column="ACCT_NO" property="acctNo"/>
+        <result column="BR_CODE" property="brCode"/>
+        <result column="BR_NAME" property="brName"/>
+    </resultMap>
+    <select id="selectMaxSumCustomer" parameterType="java.util.Map" resultMap="maxCustMap">
+        SELECT YEAR, MAX(SUM_AMT) SUM_AMT, MAX(ACCT_NM) ACCT_NM, MAX(ACCT_NO) ACCT_NO FROM
             (SELECT YEAR, B.ACCT_NM, A.ACCT_NO, SUM(A.AMOUNT) AS SUM_AMT
-            FROM (SELECT SUBSTR(TRANS_DT, 0, 4) AS YEAR, ACCT_NO, AMOUNT FROM TRANS_HIS WHERE CANCEL_YN = 'N' AND TRANS_DT BETWEEN 20180000 AND 20191231) A
+            FROM (
+                SELECT SUBSTR(TRANS_DT, 0, 4) AS YEAR, ACCT_NO, AMOUNT
+                FROM TRANS_HIS
+                WHERE CANCEL_YN = 'N' AND TRANS_DT BETWEEN '20180000' AND '20191231'
+            ) A
             LEFT JOIN ACCT_INFO B ON A.ACCT_NO = B.ACCT_NO
             GROUP BY A.ACCT_NO, YEAR
             )
         GROUP BY YEAR
     </select>
+    <select id="selectNoTransaction" parameterType="java.util.Map" resultMap="maxCustMap">
+        SELECT A.ACCT_NO, ACCT_NM, SUBSTR(B.TRANS_DT, 0, 4) AS YEAR
+        FROM ACCT_INFO A
+        LEFT JOIN TRANS_HIS B
+        ON A.ACCT_NO = B.ACCT_NO AND (SUBSTR(TRANS_DT, 0, 4) != '2018' AND SUBSTR(TRANS_DT, 0, 4) != '2019')
+        WHERE A.ACCT_NO NOT IN(SELECT ACCT_NO
+                                FROM TRANS_HIS
+                                WHERE CANCEL_YN = 'N' AND TRANS_DT BETWEEN '20180000' AND '20191231'
+                                GROUP BY ACCT_NO)
+        GROUP BY A.ACCT_NO, A.ACCT_NM, SUBSTR(B.TRANS_DT, 0, 4)
+    </select>
+    <select id="selectOrderByMax" parameterType="java.util.Map" resultMap="maxCustMap">
+        SELECT YEAR, SUM(SUM_AMT) SUM_AMT, B.BANK_CD BR_CODE, C.BANK_NM BR_NAME FROM
+            (SELECT SUBSTR(TRANS_DT, 0, 4) YEAR, ACCT_NO, SUM(AMOUNT) SUM_AMT
+            FROM TRANS_HIS
+            GROUP BY YEAR, ACCT_NO) A
+        LEFT JOIN ACCT_INFO B
+            ON A.ACCT_NO = B.ACCT_NO
+        LEFT JOIN BANK_INFO C
+            ON B.BANK_CD = C.BANK_CD
+        GROUP BY YEAR, B.BANK_CD, C.BANK_NM
+        ORDER BY YEAR, SUM_AMT DESC
+    </select>
 
+<!--    SELECT ACCT_NO-->
+<!--    FROM TRANS_HIS-->
+<!--    WHERE CANCEL_YN = 'N' AND TRANS_DT BETWEEN '20180000' AND '20191231'-->
+<!--    GROUP BY ACCT_NO;-->
+
+<!--    SELECT * FROM ACCT_INFO-->
+<!--    WHERE ACCT_NO NOT IN(SELECT ACCT_NO-->
+<!--    FROM TRANS_HIS-->
+<!--    WHERE CANCEL_YN = 'N' AND TRANS_DT BETWEEN '20180000' AND '20191231'-->
+<!--    GROUP BY ACCT_NO);-->
 </mapper>

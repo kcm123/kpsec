@@ -35,7 +35,7 @@ public class ApiController {
     @ApiOperation(value = "1. 연도별 합계 금액이 가장 많은 고객")
     @PostMapping(value = "/getMaxSumCustomer")
     public CommonResult getMaxSumCustomer() throws Exception {
-        List<Map<String,Object>> list = apiService.getList();
+        List<Map<String,Object>> list = apiService.getMaxSumCustomer();
         String oMsg = "";
         return responseService.getSingleResult(list, oMsg);
     }
@@ -44,36 +44,32 @@ public class ApiController {
     @ApiOperation(value = "2. 거래가 없는 고객(2018 or 2019)")
     @PostMapping(value = "/getNoTransaction")
     public ResponseEntity<?> getNoTransaction() throws Exception {
-        List<Map<String,Object>> list = apiService.getList();
+        List<Map<String,Object>> list = apiService.getNoTransaction();
 //        String oMsg = "OK";
         return ResponseEntity.ok(responseService.getListResult(list, ""));
     }
 
     // 3. 연도별 관리점별 거래금액 합계를 구하고 합계금액이 큰 순서로 출력하는 API 개발.( 취소여부가 ‘Y’ 거래는 취소된 거래임) 
-//    @ApiOperation(value = "3. 거래 합계금액이 큰 순서로 출력")
-//    @PostMapping(value = "/getOrderByMax")
-//    public ResponseEntity<?> getOrderByMax() throws Exception {
-//        List<Map<String,Object>> list = apiService.getList();
-//        String oMsg = "OK";
-//        return ResponseEntity.ok(responseService.getListResult(list, null));
-//    }
+    @ApiOperation(value = "3. 거래 합계금액이 큰 순서로 출력")
+    @PostMapping(value = "/getOrderByMax")
+    public ResponseEntity<?> getOrderByMax() throws Exception {
+        List<Map<String,Object>> list = apiService.getOrderByMax();
+        String oMsg = "OK";
+        return ResponseEntity.ok(responseService.getListResult(list, null));
+    }
 //
 //    // 4. 분당점과 판교점을 통폐합하여 판교점으로 관리점 이관을 하였습니다. 지점명을 입력하면 해당지점의 거래금액 합계를 출력하는 API 개발( 취소여부가 ‘Y’ 거래는 취소된 거래임,)
-//    @ApiOperation(value = "4. 지점명을 입력하면 해당지점의 거래금액 합계를 출력")
-//    @PostMapping(value = "/getSumAmt")
-//    public CommonResult getSumAmt(
-//            @ApiParam(value = "회사코드", required = true) @RequestParam String compCd,
-//            @ApiParam(value = "출고처코드(창고코드)", required = true) @RequestParam String outbPlcCd,
-//            @ApiParam(value = "출고일자", required = false) @RequestParam(required=false) String outbDt
-//    ) throws Exception {
-//        Map<String, Object> paramMap = new HashMap<>();
-//        paramMap.put("compCd", compCd);
-//        paramMap.put("outbPlcCd", outbPlcCd);
-//        paramMap.put("outbDt", outbDt);
-//
-//        List<Map<String,Object>> list = new ArrayList<>();//outboundService.getDlvList(paramMap);
-//        String oMsg = "";//(String) paramMap.get("oMsg");
-//
-//        return responseService.getSingleResult(list, oMsg);
-//    }
+    @ApiOperation(value = "4. 지점명을 입력하면 해당지점의 거래금액 합계를 출력")
+    @PostMapping(value = "/getSumAmt")
+    public CommonResult getSumAmt(
+            @ApiParam(value = "관리점명", required = true) @RequestParam String brName
+    ) throws Exception {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("brName", brName);
+
+        Map<String,Object> list = apiService.getSumAmt(paramMap);
+        String oMsg = "";//(String) paramMap.get("oMsg");
+
+        return responseService.getSingleResult(list, oMsg);
+    }
 }

@@ -17,22 +17,22 @@ public class ApiService {
     @Autowired
     ApiDAO acctInfoDAO;
 
-    public List<Map<String, Object>> getList() throws Exception{
-        Map<String, Object> map = new HashMap<>();
-        List<Map<String, Object>> list = acctInfoDAO.selectAcctInfoList(map);
-//        List<Map<String,Object>> list = new ArrayList<>();
-//        Map<String, Object> map1 = new HashMap<>();
-//        map1.put("year", "2019");
-//        map1.put("name", "국민은행");
-//        map1.put("acctNo", "12345");
-//        Map<String, Object> map2 = new HashMap<>();
-//        map2.put("year", "2021");
-//        map2.put("name", "시티은행");
-//        map2.put("acctNo", "00000");
-//        list.add(map1);
-//        list.add(map2);
-//        logger.info("getList completed");
+    public List<Map<String, Object>> getMaxSumCustomer() throws Exception{
+        List<Map<String, Object>> list = acctInfoDAO.selectMaxSumCustomer();
         return list;
-    };
-
+    }
+    public List<Map<String, Object>> getNoTransaction() throws Exception{
+        List<Map<String, Object>> list = acctInfoDAO.selectNoTransaction();
+        return list;
+    }
+    public List<Map<String, Object>> getOrderByMax() throws Exception{
+        List<Map<String, Object>> list = acctInfoDAO.selectOrderByMax();
+        return list;
+    }
+    public Map<String, Object> getSumAmt(Map<String, Object> paramMap) throws Exception{
+        Map<String, Object> map = new HashMap<>();
+        map.put("brName", "분당점");
+        map.put("brCode", "1111");
+        return map;
+    }
 }

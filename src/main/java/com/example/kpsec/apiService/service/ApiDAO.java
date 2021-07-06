@@ -10,4 +10,5 @@ public interface ApiDAO {
     List<Map<String, Object>> selectMaxSumCustomer() throws Exception;
     List<Map<String, Object>> selectNoTransaction() throws Exception;
     List<Map<String, Object>> selectOrderByMax() throws Exception;
+    Map<String, Object> selectSumAmt(Map<String, Object> paramMap) throws Exception;
 }

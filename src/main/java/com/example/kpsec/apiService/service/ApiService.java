@@ -30,9 +30,7 @@ public class ApiService {
         return list;
     }
     public Map<String, Object> getSumAmt(Map<String, Object> paramMap) throws Exception{
-        Map<String, Object> map = new HashMap<>();
-        map.put("brName", "분당점");
-        map.put("brCode", "1111");
+        Map<String, Object> map = acctInfoDAO.selectSumAmt(paramMap);
         return map;
     }
 }

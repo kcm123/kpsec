@@ -45,15 +45,20 @@
         GROUP BY YEAR, B.BANK_CD, C.BANK_NM
         ORDER BY YEAR, SUM_AMT DESC
     </select>
-
-<!--    SELECT ACCT_NO-->
+    <select id="selectSumAmt" parameterType="java.util.Map" resultMap="maxCustMap">
+        SELECT SUM(AMOUNT) FROM TRANS_HIS
+        WHERE ACCT_NO IN(
+            SELECT ACCT_NO FROM ACCT_INFO WHERE BANK_CD = (
+                SELECT BANK_CD FROM BANK_INFO WHERE BANK_NM LIKE '%' || #{brName}  || '%'))
+          AND CANCEL_YN = 'N'
+    </select>
+<!--    SELECT SUM(SUM_AMT) FROM-->
+<!--    (SELECT SUBSTR(TRANS_DT, 0, 4) YEAR, ACCT_NO, SUM(AMOUNT) SUM_AMT-->
 <!--    FROM TRANS_HIS-->
-<!--    WHERE CANCEL_YN = 'N' AND TRANS_DT BETWEEN '20180000' AND '20191231'-->
-<!--    GROUP BY ACCT_NO;-->
-
-<!--    SELECT * FROM ACCT_INFO-->
-<!--    WHERE ACCT_NO NOT IN(SELECT ACCT_NO-->
-<!--    FROM TRANS_HIS-->
-<!--    WHERE CANCEL_YN = 'N' AND TRANS_DT BETWEEN '20180000' AND '20191231'-->
-<!--    GROUP BY ACCT_NO);-->
+<!--    GROUP BY YEAR, ACCT_NO) A-->
+<!--    LEFT JOIN ACCT_INFO B-->
+<!--    ON A.ACCT_NO = B.ACCT_NO-->
+<!--    LEFT JOIN BANK_INFO C-->
+<!--    ON B.BANK_CD = C.BANK_CD-->
+<!--    WHERE C.BANK_NM LIKE '%' || #{brName}  || '%'-->
 </mapper>

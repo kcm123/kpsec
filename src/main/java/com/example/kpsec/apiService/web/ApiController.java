@@ -61,12 +61,9 @@ public class ApiController {
 //    // 4. 분당점과 판교점을 통폐합하여 판교점으로 관리점 이관을 하였습니다. 지점명을 입력하면 해당지점의 거래금액 합계를 출력하는 API 개발( 취소여부가 ‘Y’ 거래는 취소된 거래임,)
     @ApiOperation(value = "4. 지점명을 입력하면 해당지점의 거래금액 합계를 출력")
     @PostMapping(value = "/getSumAmt")
-    public CommonResult getSumAmt(
-            @ApiParam(value = "관리점명", required = true) @RequestParam String brName
-    ) throws Exception {
+    public CommonResult getSumAmt(@ApiParam(value = "관리점명", required = true) @RequestParam String brName) throws Exception {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("brName", brName);
-
         Map<String,Object> list = apiService.getSumAmt(paramMap);
         String oMsg = "";//(String) paramMap.get("oMsg");
 

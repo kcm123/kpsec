@@ -2,6 +2,7 @@ package com.example.kpsec.common.service;
 
 import com.example.kpsec.common.model.CommonResult;
 import com.example.kpsec.common.model.ListResult;
+import com.example.kpsec.common.model.SimpleResult;
 import com.example.kpsec.common.model.SingleResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,39 +21,11 @@ public class ResponseService {
         /**
          * SuccessS
          */
-        DATA_NOT_FOUND("11", "Data Not Found", HttpStatus.OK),
-        /**
-         * Bad Request
-         */
-        BAD_REQUEST("80", "Bad Request", HttpStatus.BAD_REQUEST),
-        /**
-         * Unauthorized
-         */
-        UNAUTHORIZED("81", "Unauthorized", HttpStatus.UNAUTHORIZED),
-        /**
-         * Forbidden
-         */
-        FORBIDDEN("82", "Forbidden", HttpStatus.FORBIDDEN),
-        /**
-         * Resource Not Found
-         */
-        NOT_FOUND("83", "Resource Not Found", HttpStatus.NOT_FOUND),
-        /**
-         * HTTP Method Not Allowed
-         */
-        METHOD_NOT_ALLOWED("84", "HTTP Method Not Allowed", HttpStatus.METHOD_NOT_ALLOWED),
-        /**
-         * Unsupported Media Type
-         */
-        UNSUPPORTED_MEDIA_TYPE("85", "Unsupported Media Type", HttpStatus.UNSUPPORTED_MEDIA_TYPE),
-        /**
-         * Too many requests
-         */
-        TOO_MANY_REQUESTS("86", "Too_many_requests", HttpStatus.TOO_MANY_REQUESTS),
+        DATA_NOT_FOUND("404", "br code not found error", HttpStatus.OK),
         /**
          * System Error
          */
-        SYS_ERROR("99", "System Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        SYS_ERROR("500", "System Error", HttpStatus.INTERNAL_SERVER_ERROR);
 
 
         private String code;
@@ -77,7 +50,12 @@ public class ResponseService {
             return httpStatus;
         }
     }
-
+    // 기본값 결과 처리 메소드
+    public <T> SimpleResult<T> getSimpleResult(T data) {
+        SimpleResult<T> result = new SimpleResult<>();
+        result.setData(data);
+        return result;
+    }
     // 단일건 결과를 처리하는 메소드
     public <T> SingleResult<T> getSingleResult(T data, String message) {
         SingleResult<T> result = new SingleResult<>();
@@ -123,7 +101,6 @@ public class ResponseService {
         result.setMessage(CommonResponse.SUCCESS.getmessage());
     }
 
-    // SP return message + data
     private void setSuccessResult(CommonResult result, String message) {
         result.setCode(CommonResponse.SUCCESS.getCode());
         if (("").equals(message) || message == null) {

@@ -5,6 +5,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class SimpleResult<T> {
+public class SimpleResult<T> extends CommonResult {
     private T data;
 }

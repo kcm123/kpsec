@@ -34,6 +34,7 @@ public class ApiService {
     public List<Map<String, Object>> getOrderByMax() throws Exception{
         List<Map<String, Object>> list = acctInfoDAO.selectOrderByMax();
         List<Map<String, Object>> newList = new ArrayList<>();
+        // 출력 포멧에 맞춰 수정(newList)
         if(list != null && list.size() > 0){
             String years = "";
             Map<String, Object> map = new HashMap<>();
@@ -46,6 +47,7 @@ public class ApiService {
                         map.put("dataList", mapList);
                         map.put("year", years);
                         newList.add(map);
+                        // 초기화
                         map = new HashMap<>();
                         mapList = new ArrayList<>();
                     }
@@ -54,11 +56,13 @@ public class ApiService {
                 dbMap.remove("year");
                 mapList.add(list.get(i));
             }
+            // 마지막 데이터 추가
+            map.put("year", years);
             map.put("dataList", mapList);
-            logger.info("getOrderByMax() completed::" + newList.size());
+            newList.add(map);
         }
-        logger.info("getOrderByMax() completed::" + list.size());
-        return list;
+        logger.info("getOrderByMax() completed::" + newList.size());
+        return newList;
     }
     // 4. 지점명을 입력하면 해당지점의 거래금액 합계를 출력
     public Map<String, Object> getSumAmt(Map<String, Object> paramMap) throws Exception{

@@ -17,5 +17,6 @@ CREATE TABLE TRANS_HIS (
                            TRANS_NO INTEGER NOT NULL,
                            AMOUNT INTEGER,
                            VAT INTEGER,
-                           CANCEL_YN VARCHAR(2)
+                           CANCEL_YN VARCHAR(2),
+                           CONSTRAINT TRANS_HIS_PK PRIMARY KEY(TRANS_DT, ACCT_NO, TRANS_NO)
 ) AS SELECT * FROM CSVREAD('classpath:/db/TRANS_HIS.csv');

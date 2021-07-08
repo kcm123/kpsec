@@ -14,6 +14,7 @@ public class ApiService {
 
     @Autowired
     ApiDAO acctInfoDAO;
+
     // 1. 연도별 합계 금액이 가장 많은 고객
     public List<Map<String, Object>> getMaxSumCustomer() throws Exception{
         List<Map<String, Object>> list = acctInfoDAO.selectMaxSumCustomer();
@@ -35,7 +36,7 @@ public class ApiService {
     // 4. 지점명을 입력하면 해당지점의 거래금액 합계를 출력
     public Map<String, Object> getSumAmt(Map<String, Object> paramMap) throws Exception{
         Map<String, Object> map = acctInfoDAO.selectSumAmt(paramMap);
-        logger.info("getSumAmt() completed::" + paramMap);
+        logger.info("getSumAmt() completed::");
         return map;
     }
 }

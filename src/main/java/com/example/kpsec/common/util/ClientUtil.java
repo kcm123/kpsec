@@ -5,11 +5,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 
 public class ClientUtil {
-	/**
-	 * 클라이언트 IP를 조회합니다.
-	 *
-	 * @return the ip
-	 */
+	// 테스트_client ip 조회
 	public static String getIp() {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		String result = request.getHeader("X-FORWARDED-FOR");

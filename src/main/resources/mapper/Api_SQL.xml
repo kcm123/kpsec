@@ -16,18 +16,20 @@
           SELECT * , RANK() OVER(PARTITION BY YEAR ORDER BY SUM_AMT DESC) RANK
           FROM (SELECT SUBSTR(TRANS_DT, 0, 4) AS YEAR, B.ACCT_NM, A.ACCT_NO, SUM(AMOUNT - VAT) AS SUM_AMT
                FROM TRANS_HIS A
-                   LEFT JOIN ACCT_INFO B ON A.ACCT_NO = B.ACCT_NO
+                   LEFT JOIN ACCT_INFO B
+                   ON A.ACCT_NO = B.ACCT_NO
                WHERE CANCEL_YN = 'N' AND TRANS_DT BETWEEN '20180000' AND '20191231'
                GROUP BY A.ACCT_NO, YEAR)
-      ) WHERE RANK = 1
+        )
+        WHERE RANK = 1
         ORDER BY YEAR
     </select>
 
     <select id="selectNoTransaction" parameterType="java.util.Map" resultMap="maxCustMap">
         SELECT NVL(SUBSTR(B.TRANS_DT, 0, 4), '')  AS YEAR, ACCT_NM AS NAME, A.ACCT_NO
         FROM ACCT_INFO A
-        LEFT JOIN TRANS_HIS B
-        ON A.ACCT_NO = B.ACCT_NO AND (SUBSTR(TRANS_DT, 0, 4) != '2018' AND SUBSTR(TRANS_DT, 0, 4) != '2019')
+            LEFT JOIN TRANS_HIS B
+            ON A.ACCT_NO = B.ACCT_NO AND (SUBSTR(TRANS_DT, 0, 4) != '2018' AND SUBSTR(TRANS_DT, 0, 4) != '2019')
         WHERE A.ACCT_NO NOT IN(SELECT ACCT_NO
                                 FROM TRANS_HIS
                                 WHERE CANCEL_YN = 'N' AND TRANS_DT BETWEEN '20180000' AND '20191231'
@@ -42,9 +44,9 @@
             WHERE CANCEL_YN = 'N'
             GROUP BY YEAR, ACCT_NO) A
         LEFT JOIN ACCT_INFO B
-            ON A.ACCT_NO = B.ACCT_NO
+        ON A.ACCT_NO = B.ACCT_NO
         LEFT JOIN BANK_INFO C
-            ON B.BANK_CD = C.BANK_CD
+        ON B.BANK_CD = C.BANK_CD
         GROUP BY YEAR, B.BANK_CD, C.BANK_NM
         ORDER BY YEAR, SUM_AMT DESC
     </select>

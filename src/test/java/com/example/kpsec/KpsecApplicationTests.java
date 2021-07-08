@@ -2,8 +2,7 @@ package com.example.kpsec;
 
 import com.example.kpsec.apiService.service.ApiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.tomcat.util.json.JSONParser;
-import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.List;
@@ -66,20 +64,27 @@ class KpsecApplicationTests {
     @Test
     void getSumAmt() {
         try {
-            // TODO 파라미터 json 파일 읽기
-//            JSONParser parser = new JSONParser();
-//            Object obj = parser.parse(new FileReader("/resources/test.json"));
-//            JSONObject info = (JSONObject)obj;
-
-            String brName = "분당";
-            Map<String, Object> paramMap = new HashMap<>();
-            paramMap.put("brName", brName);
-            Map<String,Object> map = apiService.getSumAmt(paramMap);
-            String jsonString = new ObjectMapper().writeValueAsString(map);
-            logger.info("4. 지점명을 입력하면 해당지점의 거래금액 합계를 출력 completed::" + brName);
+            // 파라미터 json 파일 읽기
+            JSONParser parser = new JSONParser();
+            Object obj = parser.parse(new FileReader(getClass().getClassLoader().getResource("test.json").getPath()));
+            Map<String, Object> paramMap = new ObjectMapper().readValue(obj.toString(), Map.class);
+            // 결과처리
+            Map<String,Object> resultMap = apiService.getSumAmt(paramMap);
+            resultMap = checkExistYn(resultMap);
+            String jsonString = new ObjectMapper().writeValueAsString(resultMap);
+            logger.info("4. 지점명을 입력하면 해당지점의 거래금액 합계를 출력 completed::" + obj);
             logger.info(jsonString);
         }catch (Exception e){
             logger.error(e.toString());
         }
+    }
+    // 데이터 없을 경우 오류코드 매핑
+    Map<String, Object> checkExistYn(Map<String, Object> paramMap){
+        if(paramMap == null){
+            paramMap = new HashMap<>();
+            paramMap.put("code", "404");
+            paramMap.put("message", "br code not found error");
+        }
+        return paramMap;
     }
 }

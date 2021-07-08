@@ -26,6 +26,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc:2.5.2'
 //    implementation 'org.apache.ibatis:ibatis-core:3.0'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.4'
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation 'junit:junit:4.12'
 
     runtimeOnly 'com.h2database:h2'

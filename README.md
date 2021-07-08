@@ -1,6 +1,9 @@
 # 구축환경 및 프로젝트 구조
 
 - Spring Boot
+#### 실행 방법
+1. Unit Test : KpsecApplicationTests.java 실행 (Test 코드 실행)
+2. Swagger-ui : KpsecApplication.java 실행 (Spring Boot 실행)
 
 #### 공통 (com.example.kpsec.common)
 
@@ -37,6 +40,7 @@
 2. 거래가 없는 고객(2018 or 2019) : getNoTransaction()
 3. 거래 합계금액이 큰 순서로 출력 : getOrderByMax()
 4. 지점명을 입력하면 해당지점의 거래금액 합계를 출력 : getSumAmt()
+  * 파라미터 : /test/resources/test.json에 정의됨.
 
 #### Swagger
 

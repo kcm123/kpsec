@@ -64,9 +64,9 @@ public class ApiController {
     public CommonResult getSumAmt(@ApiParam(value = "관리점명", required = true) @RequestParam String brName) throws Exception {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("brName", brName);
-        Map<String,Object> list = apiService.getSumAmt(paramMap);
+        Map<String,Object> map = apiService.getSumAmt(paramMap);
         String oMsg = "";//(String) paramMap.get("oMsg");
 
-        return responseService.getSingleResult(list, oMsg);
+        return responseService.getSingleResult(map, oMsg);
     }
 }

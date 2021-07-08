@@ -9,19 +9,19 @@
         <result column="BR_CODE" property="brCode"/>
         <result column="BR_NAME" property="brName"/>
     </resultMap>
+
     <select id="selectMaxSumCustomer" parameterType="java.util.Map" resultMap="maxCustMap">
-        SELECT YEAR, MAX(SUM_AMT) SUM_AMT, MAX(ACCT_NM) ACCT_NM, MAX(ACCT_NO) ACCT_NO FROM
-            (SELECT YEAR, B.ACCT_NM, A.ACCT_NO, SUM(A.AMOUNT) AS SUM_AMT
-            FROM (
-                SELECT SUBSTR(TRANS_DT, 0, 4) AS YEAR, ACCT_NO, AMOUNT
-                FROM TRANS_HIS
-                WHERE CANCEL_YN = 'N' AND TRANS_DT BETWEEN '20180000' AND '20191231'
-            ) A
-            LEFT JOIN ACCT_INFO B ON A.ACCT_NO = B.ACCT_NO
-            GROUP BY A.ACCT_NO, YEAR
-            )
-        GROUP BY YEAR
+        SELECT * FROM (
+          SELECT * , RANK() OVER(PARTITION BY YEAR ORDER BY SUM_AMT DESC) RANK
+          FROM (SELECT SUBSTR(TRANS_DT, 0, 4) AS YEAR, B.ACCT_NM, A.ACCT_NO, SUM(AMOUNT - VAT) AS SUM_AMT
+               FROM TRANS_HIS A
+                   LEFT JOIN ACCT_INFO B ON A.ACCT_NO = B.ACCT_NO
+               WHERE CANCEL_YN = 'N' AND TRANS_DT BETWEEN '20180000' AND '20191231'
+               GROUP BY A.ACCT_NO, YEAR)
+      ) WHERE RANK = 1
+        ORDER BY YEAR
     </select>
+
     <select id="selectNoTransaction" parameterType="java.util.Map" resultMap="maxCustMap">
         SELECT A.ACCT_NO, ACCT_NM, SUBSTR(B.TRANS_DT, 0, 4) AS YEAR
         FROM ACCT_INFO A
@@ -33,10 +33,12 @@
                                 GROUP BY ACCT_NO)
         GROUP BY A.ACCT_NO, A.ACCT_NM, SUBSTR(B.TRANS_DT, 0, 4)
     </select>
+
     <select id="selectOrderByMax" parameterType="java.util.Map" resultMap="maxCustMap">
         SELECT YEAR, SUM(SUM_AMT) SUM_AMT, B.BANK_CD BR_CODE, C.BANK_NM BR_NAME FROM
             (SELECT SUBSTR(TRANS_DT, 0, 4) YEAR, ACCT_NO, SUM(AMOUNT) SUM_AMT
             FROM TRANS_HIS
+            WHERE CANCEL_YN = 'N'
             GROUP BY YEAR, ACCT_NO) A
         LEFT JOIN ACCT_INFO B
             ON A.ACCT_NO = B.ACCT_NO
@@ -45,20 +47,12 @@
         GROUP BY YEAR, B.BANK_CD, C.BANK_NM
         ORDER BY YEAR, SUM_AMT DESC
     </select>
+
     <select id="selectSumAmt" parameterType="java.util.Map" resultMap="maxCustMap">
-        SELECT SUM(AMOUNT) FROM TRANS_HIS
+        SELECT SUM(AMOUNT) AS SUM_AMT FROM TRANS_HIS
         WHERE ACCT_NO IN(
             SELECT ACCT_NO FROM ACCT_INFO WHERE BANK_CD = (
                 SELECT BANK_CD FROM BANK_INFO WHERE BANK_NM LIKE '%' || #{brName}  || '%'))
           AND CANCEL_YN = 'N'
     </select>
-<!--    SELECT SUM(SUM_AMT) FROM-->
-<!--    (SELECT SUBSTR(TRANS_DT, 0, 4) YEAR, ACCT_NO, SUM(AMOUNT) SUM_AMT-->
-<!--    FROM TRANS_HIS-->
-<!--    GROUP BY YEAR, ACCT_NO) A-->
-<!--    LEFT JOIN ACCT_INFO B-->
-<!--    ON A.ACCT_NO = B.ACCT_NO-->
-<!--    LEFT JOIN BANK_INFO C-->
-<!--    ON B.BANK_CD = C.BANK_CD-->
-<!--    WHERE C.BANK_NM LIKE '%' || #{brName}  || '%'-->
 </mapper>

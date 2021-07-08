@@ -4,6 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +33,30 @@ public class ApiService {
     // 3. 거래 합계금액이 큰 순서로 출력
     public List<Map<String, Object>> getOrderByMax() throws Exception{
         List<Map<String, Object>> list = acctInfoDAO.selectOrderByMax();
+        List<Map<String, Object>> newList = new ArrayList<>();
+        if(list != null && list.size() > 0){
+            String years = "";
+            Map<String, Object> map = new HashMap<>();
+            List<Map<String, Object>> mapList = new ArrayList<>();
+            for(int i = 0; i < list.size(); i++){
+                Map<String, Object> dbMap = list.get(i);
+                String year = (String) dbMap.get("year");
+                if(!years.equals(year)){
+                    if(i != 0) {
+                        map.put("dataList", mapList);
+                        map.put("year", years);
+                        newList.add(map);
+                        map = new HashMap<>();
+                        mapList = new ArrayList<>();
+                    }
+                    years = year;
+                }
+                dbMap.remove("year");
+                mapList.add(list.get(i));
+            }
+            map.put("dataList", mapList);
+            logger.info("getOrderByMax() completed::" + newList.size());
+        }
         logger.info("getOrderByMax() completed::" + list.size());
         return list;
     }

@@ -2,6 +2,8 @@ package com.example.kpsec;
 
 import com.example.kpsec.apiService.service.ApiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.tomcat.util.json.JSONParser;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -10,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -65,6 +67,10 @@ class KpsecApplicationTests {
     void getSumAmt() {
         try {
             // TODO 파라미터 json 파일 읽기
+//            JSONParser parser = new JSONParser();
+//            Object obj = parser.parse(new FileReader("/resources/test.json"));
+//            JSONObject info = (JSONObject)obj;
+
             String brName = "분당";
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("brName", brName);
